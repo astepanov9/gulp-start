@@ -38,12 +38,32 @@ function images() {
 
 function scripts() {
     return src([
-        // 'node_modules/jquery/dist/jquery.js',
         'app/js/main.js'
     ])
         .pipe(concat('main.min.js'))
         .pipe(uglify())  
         .pipe(dest('app/js'))
+        .pipe(browserSync.stream())
+}
+
+function libsScripts() {
+    return src([
+        'node_modules/jquery/dist/jquery.js',
+        'node_modules/slick-slider/slick/slick.js'
+    ])
+        .pipe(concat('libs.min.js'))
+        .pipe(uglify())  
+        .pipe(dest('app/js'))
+        .pipe(browserSync.stream())
+}
+
+function libsStyles() {
+    return src([
+        'node_modules/slick-slider/slick/slick.css',
+        'node_modules/slick-slider/slick/slick-theme.css'
+    ])
+        .pipe(concat('_libs.scss'))
+        .pipe(dest('app/scss'))
         .pipe(browserSync.stream())
 }
 
@@ -61,9 +81,9 @@ function styles() {
 
 function build() {
     return src([
-        'app/css/style.min.css',
+        'app/css/**/*',
         'app/fonts/**/*',
-        'app/js/main.min.js',
+        'app/js/**/*',
         'app/*.html'
     ], {base: 'app'})
         .pipe(dest('dist'))
@@ -76,9 +96,11 @@ function watching() {
 }
 
 exports.styles = styles;
+exports.libsStyles= libsStyles;
 exports.watching = watching;
 exports.browsersync = browsersync;
 exports.scripts = scripts;
+exports.libsScripts = libsScripts;
 exports.images = images;
 exports.cleanDist = cleanDist;
 
